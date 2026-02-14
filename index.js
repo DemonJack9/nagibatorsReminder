@@ -1,4 +1,19 @@
+const express = require('express');
 const { Client, GatewayIntentBits } = require('discord.js');
+
+const app = express();
+const PORT = process.env.PORT || 10000; // Hosting platforms inject PORT
+
+// Start minimal web server
+app.get('/', (req, res) => {
+  res.send('Discord bot is running.');
+});
+
+app.listen(PORT, () => {
+  console.log(`Web server listening on port ${PORT}`);
+});
+
+// -------------------- DISCORD BOT --------------------
 
 const client = new Client({
   intents: [
@@ -14,6 +29,8 @@ if (!process.env.TOKEN) {
 }
 
 const TOKEN = process.env.TOKEN;
+
+// (your existing functions stay unchanged)
 
 function parseInterval(input) {
   const match = input.match(/^(\d+)([smhd])$/);
@@ -83,11 +100,9 @@ client.on('messageCreate', async (message) => {
     `Scheduled message starting at ${startTime} and repeating every ${intervalInput}`
   );
 
-  // Wait until start time
   setTimeout(() => {
     message.channel.send(text);
 
-    // Then repeat
     setInterval(() => {
       message.channel.send(text);
     }, interval);
